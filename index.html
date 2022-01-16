@@ -13,55 +13,102 @@
 </head>
 
 <body>
-    <header class="">
-        <h2>Tareas por hacer...</h2>
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Recipient's username">
-            <button class="btn btn-primary" type="button">Button</button>
-            <button class="btn btn-success" type="button">Button</button>
+    <header>
+        <h2>ToDo los dias</h2>
+        <div class="list-task-input input-group">
+            <input type="text" class="form-control" placeholder="Nueva tarea o lista">
+            <button class="btn btn-primary" type="button">Tarea</button>
+            <button class="btn btn-secondary" type="button">Lista</button>
         </div>
     </header>
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">Options</label>
-        <select class="form-select" id="inputGroupSelect01">
-          <option selected>Choose...</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+    <div class="list-select input-group">
+        <select class="form-select">
+            <option selected>Para Hoy</option>
+            <option value="1">Para Mañana</option>
+            <option value="2">Algún día</option>
         </select>
+        <button class="btn btn-outline-danger" type="button">
+            <i class="bi bi-trash-fill"></i>
+        </button>
     </div>
-    <ul id="toDoList" class="list-group">
-        <li class="list-group-item">
-            <span>Desarrollar mi proyeto 2</span>
-            <div class="btn-group" role="group">
+    <!-- <div class="list-title">
+        <select class="form-select">
+            <option selected>Para Hoy</option>
+            <option value="1">Para Mañana</option>
+            <option value="2">Algún día</option>
+        </select> -->
+    </div>
+    <ul id="todolist" class="list-group">
+        <!-- Desarrollar -->
+        <li class="todolist-item list-group-item">
+            <div class="todolist-item input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input" type="checkbox" value="">
+                </div>
+                <!-- <button class="btn btn-outline-success" type="button" id="button-addon2">
+                    <i class="bi bi-check2-circle"></i>
+                </button> -->
+                <div class="form-control">Desarrollar</div>
+                <input type="text" class="form-control" value="Desarrollar">
+                <!-- <button class="btn btn-outline-danger" type="button" id="button-addon2">
+                    <i class="bi bi-trash-fill"></i>
+                </button> -->
+            </div>
+            <!-- <input type="text" class="form-control" placeholder="Nueva tarea o lista" value="Desarrollar mi proyecto 2"> -->
+            <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-up-square-fill"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
         </li>
-        <li class="list-group-item">
-            <span>Escuchar Música</span>
-            <div class="btn-group" role="group">
+        <!-- Escuchar Música -->
+        <li class="todolist-item list-group-item">
+            <div class="todolist-item input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input" type="checkbox" value="">
+                </div>
+                <div class="form-control">Escuchar Música</div>
+                <input type="text" class="form-control" value="Escuchar Música">
+            </div>
+            <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-up-square-fill"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
         </li>
-        <li class="list-group-item">
-            <span>Tirar la basura</span>
-            <div class="btn-group" role="group">
+        <!-- Tirar la basura -->
+        <li class="todolist-item list-group-item">
+            <div class="todolist-item input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input" type="checkbox" value="">
+                </div>
+                <div class="form-control">Tirar la basura</div>
+                <input type="text" class="form-control" value="Tirar la basura">
+            </div>
+            <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-up-square-fill"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
         </li>
-        <li class="list-group-item">
-            <span>Leer acerca de React</span>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary"><i class="bi bi-pencil"></i></button>
+        <!-- Leer acerca de React -->
+        <li class="todolist-item list-group-item">
+            <div class="todolist-item input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input" type="checkbox" value="">
+                </div>
+                <div class="form-control">Leer acerca de React</div>
+                <input type="text" class="form-control" value="Leer acerca de React">
+            </div>
+            <div class="todo-menu btn-group" role="group">
+                <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-up-square-fill"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>

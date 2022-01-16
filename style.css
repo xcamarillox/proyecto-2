@@ -1,0 +1,48 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    padding: 30px 15px;
+    background-color: lightseagreen;
+}
+
+header button {
+    width: 60px;
+    text-align: center;
+}
+
+h2 {
+    color: white;
+}
+
+div.list-select {
+    margin: 15px 5px;
+    width: calc(100% - 10px);
+}
+
+ul {
+    margin: 0px 5px;
+}
+
+li {
+    width: 100%;
+    text-align: center;
+}
+
+div.form-control {
+    text-align: left;
+}
+
+div.todo-menu {
+    /* display: none; */
+    margin: 8px 0px 0px 0px;
+}
