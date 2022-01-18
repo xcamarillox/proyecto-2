@@ -28,18 +28,36 @@ h2 {
     color: white;
 }
 
-div.list-task-input {}
-
-div.list-select {
-    margin: 15px 5px;
-    width: calc(100% - 10px);
+main>.container {
+    padding: 150px 15px 0;
 }
 
-div.form-control {
+div.text-desc {
     text-align: left;
 }
 
+div.todo-group-check {
+    background-color: rgb(175, 219, 247);
+}
+
+div.todolist-item {
+    margin: 15px 5px 5px;
+    width: calc(100% - 10px);
+}
+
+div.todolist-item>button {
+    font-size: large;
+    font-weight: 700;
+}
+
+#todolist {
+    text-align: center;
+}
+
+#edit-input {
+    display: none;
+}
+
 div.todo-menu {
-    /* display: none; */
-    margin: 8px 0px 0px 0px;
+    width: calc(50%);
 }
