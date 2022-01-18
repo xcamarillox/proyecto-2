@@ -11,8 +11,12 @@ body {
 }
 
 header {
-    padding: 30px 15px;
+    width: 100%;
+}
+
+nav {
     background-color: lightseagreen;
+    width: 100%;
 }
 
 header button {
@@ -24,18 +28,11 @@ h2 {
     color: white;
 }
 
+div.list-task-input {}
+
 div.list-select {
     margin: 15px 5px;
     width: calc(100% - 10px);
-}
-
-ul {
-    margin: 0px 5px;
-}
-
-li {
-    width: 100%;
-    text-align: center;
 }
 
 div.form-control {

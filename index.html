@@ -14,64 +14,97 @@
 
 <body>
     <header>
-        <h2>ToDo los dias</h2>
-        <div class="list-task-input input-group">
-            <input type="text" class="form-control" placeholder="Nueva tarea o lista">
-            <button class="btn btn-primary" type="button">Tarea</button>
-            <button class="btn btn-secondary" type="button">Lista</button>
-        </div>
-    </header>
-    <div class="list-select input-group">
-        <select class="form-select">
-            <option selected>Para Hoy</option>
-            <option value="1">Para Mañana</option>
-            <option value="2">Algún día</option>
-        </select>
-        <button class="btn btn-outline-danger" type="button">
-            <i class="bi bi-trash-fill"></i>
-        </button>
-    </div>
-    <!-- <div class="list-title">
-        <select class="form-select">
-            <option selected>Para Hoy</option>
-            <option value="1">Para Mañana</option>
-            <option value="2">Algún día</option>
-        </select> -->
-    </div>
-    <ul id="todolist" class="list-group">
-        <!-- Desarrollar -->
-        <li class="todolist-item list-group-item">
-            <div class="todolist-item input-group">
-                <div class="input-group-text">
-                    <input class="form-check-input" type="checkbox" value="">
+        <nav class="navbar">
+            <div class="container d-flex flex-row">
+                <h2 class="mt-2">ToDos los dias</h2>
+                <div class="mt-1 list-task-input input-group">
+                    <input type="text" class="form-control" placeholder="Tarea o lista nueva...">
+                    <!-- <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">+</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Tarea</a></li>
+                        <li><a class="dropdown-item" href="#">Lista</a></li>
+                    </ul> -->
+                    <button class="btn btn-primary border-white" type="button">Tarea</button>
+                    <button class="btn btn-primary border-white" type="button">Lista</button>
                 </div>
-                <!-- <button class="btn btn-outline-success" type="button" id="button-addon2">
-                    <i class="bi bi-check2-circle"></i>
-                </button> -->
-                <div class="form-control">Desarrollar</div>
-                <input type="text" class="form-control" value="Desarrollar">
-                <!-- <button class="btn btn-outline-danger" type="button" id="button-addon2">
-                    <i class="bi bi-trash-fill"></i>
-                </button> -->
+                <div class="mt-2 list-select input-group">
+                    <select class="form-select">
+                        <option selected>Para Hoy</option>
+                        <option value="1">Para Mañana</option>
+                        <option value="2">Algún día</option>
+                    </select>
+                    <button class="btn btn-danger" type="button">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- <div class="container list-select input-group">
+                <select class="form-select">
+                <option selected>Para Hoy</option>
+                <option value="1">Para Mañana</option>
+                <option value="2">Algún día</option>
+            </select>
+                <button class="btn btn-danger" type="button">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+            </div> -->
+
+        </nav>
+    </header>
+    <main>
+        <!-- <div class="list-select input-group">
+            <select class="form-select">
+                <option selected>Para Hoy</option>
+                <option value="1">Para Mañana</option>
+                <option value="2">Algún día</option>
+            </select>
+            <button class="btn btn-outline-danger" type="button">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+        </div> -->
+        <!-- <div class="list-title">
+            <select class="form-select">
+                <option selected>Para Hoy</option>
+                <option value="1">Para Mañana</option>
+                <option value="2">Algún día</option>
+            </select>
+        </div> -->
+        <div class="container" id="todolist">
+            <div class="todolist-item input-group">
+                <!-- <div class="input-group-text">
+                        <input class="form-check-input" type="checkbox" id="btn-check" value="">
+                    </div> -->
+                <button class="btn btn-outline-success" data-bs-toggle="button" type="button" id="button-addon2">
+                        <i class="bi bi-check-square"></i>
+                        <i class="bi bi-square"></i>
+                    </button>
+                <!-- <button class="btn btn-outline-primary" type="button" >
+                        <i class="bi bi-square-half"></i>
+                    </button> -->
+                <div class="form-control" id="text-desc">Desarrollar</div>
+                <input type="text" id="edit-desc" class="form-control" value="Desarrollar">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="button"><i class="bi bi-exclamation-square"></i></button>
             </div>
             <!-- <input type="text" class="form-control" placeholder="Nueva tarea o lista" value="Desarrollar mi proyecto 2"> -->
             <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
-                <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
+                <button type="button" class="btn btn-success">OK</button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-up-square-fill"></i></button>
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
-        </li>
-        <!-- Escuchar Música -->
-        <li class="todolist-item list-group-item">
+
             <div class="todolist-item input-group">
-                <div class="input-group-text">
-                    <input class="form-check-input" type="checkbox" value="">
-                </div>
+                <button class="btn btn-outline-success" data-bs-toggle="button" type="button" id="button-addon2">
+                        <i class="bi bi-check2-circle"></i>
+                    </button>
                 <div class="form-control">Escuchar Música</div>
                 <input type="text" class="form-control" value="Escuchar Música">
+                <button class="btn btn-outline-primary" type="button">
+                        <i class="bi bi-square-half"></i>
+                    </button>
             </div>
+
             <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
                 <button type="button" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
@@ -79,15 +112,16 @@
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
-        </li>
-        <!-- Tirar la basura -->
-        <li class="todolist-item list-group-item">
+
             <div class="todolist-item input-group">
-                <div class="input-group-text">
-                    <input class="form-check-input" type="checkbox" value="">
-                </div>
+                <button class="btn btn-outline-success" data-bs-toggle="button" type="button" id="button-addon2">
+                        <i class="bi bi-check2-circle"></i>
+                    </button>
                 <div class="form-control">Tirar la basura</div>
                 <input type="text" class="form-control" value="Tirar la basura">
+                <button class="btn btn-outline-primary" type="button">
+                        <i class="bi bi-square-half"></i>
+                    </button>
             </div>
             <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
@@ -96,15 +130,16 @@
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
-        </li>
-        <!-- Leer acerca de React -->
-        <li class="todolist-item list-group-item">
+
             <div class="todolist-item input-group">
-                <div class="input-group-text">
-                    <input class="form-check-input" type="checkbox" value="">
-                </div>
+                <button class="btn btn-outline-success" data-bs-toggle="button" type="button" id="button-addon2">
+                        <i class="bi bi-check2-circle"></i>
+                    </button>
                 <div class="form-control">Leer acerca de React</div>
                 <input type="text" class="form-control" value="Leer acerca de React">
+                <button class="btn btn-outline-primary" type="button">
+                        <i class="bi bi-square-half"></i>
+                    </button>
             </div>
             <div class="todo-menu btn-group" role="group">
                 <button type="button" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></button>
@@ -113,9 +148,9 @@
                 <button type="button" class="btn btn-primary"><i class="bi bi-caret-down-square-fill"></i></button>
                 <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
             </div>
-        </li>
-    </ul>
-
+            </li>
+        </div>
+    </main>
     <footer>
     </footer>
 
