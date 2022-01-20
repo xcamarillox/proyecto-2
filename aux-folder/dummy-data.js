@@ -1,4 +1,8 @@
-let dummyData = [{
+let dummyDefaults = {
+    defaultList: 1
+};
+
+let dummyLists = [{
         listName: "Propositos de año nuevo",
         tasks: [{
                 taskName: "hacer deporte",
@@ -48,4 +52,5 @@ let dummyData = [{
     }
 ];
 
-export { dummyData };
+
+export { dummyLists, dummyDefaults };
