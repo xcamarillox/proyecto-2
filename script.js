@@ -12,3 +12,9 @@ console.log(myLists[myDefaults.objetonuevo]);
 //console.log(lists[40].tasks)
 
 auxFunctions.refresh(myLists, myDefaults);
+
+
+function selected() {
+    console.log("ya");
+}
+auxFunctions.getEl(domElements.navSelect).onchange = selected;
