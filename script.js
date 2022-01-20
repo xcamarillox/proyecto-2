@@ -11,7 +11,7 @@ console.log(myDefaults.objetonuevo);
 console.log(myLists[myDefaults.objetonuevo]);
 //console.log(lists[40].tasks)
 
-auxFunctions.refresh(myLists, myDefaults);
+auxFunctions.refreshApp(myLists, myDefaults);
 
 
 function selected() {

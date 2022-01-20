@@ -19,7 +19,7 @@ const getData = (myVar) => {
     return myData;
 };
 
-const refresh = (lists, defaults) => {
+const refreshApp = (lists, defaults) => {
     getEl(domElements.navInput).value = "";
     getEl(domElements.todoList).innerHTML = "";
     getEl(domElements.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList == 0 ? "selected" : "", "Mis Listas"));
@@ -56,7 +56,7 @@ const getSelectTemplate = (selected, list) => {
 
 let auxFunctions = {
     getData,
-    refresh,
+    refreshApp,
     getEl
 };
 export default auxFunctions;
