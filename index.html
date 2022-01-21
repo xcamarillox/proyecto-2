@@ -18,7 +18,7 @@
             <div class="container">
                 <h2>ToDos los dias</h2>
                 <div class="nav-input input-group">
-                    <input type="text" class="form-control" placeholder="Tarea o lista nueva..." id="nav-input" value="dhdfh">
+                    <input type="text" class="form-control" placeholder="Tarea o lista nueva..." id="nav-input" value="">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" id="nav-add">
                         <i class="bi bi-plus-square"></i>
                     </button>
@@ -69,11 +69,13 @@
                 </div>
             </div>
             <div class="check-menu btn-group column" role="group" id="check-menu">
-                <button type="button" class="btn btn-primary" id="check-all" data-bs-toggle="modal" data-bs-target="#modalMessage">
-                    <i class="bi bi-check2-all"></i>
+                <!-- <button type="button" class="btn btn-primary" id="check-all" data-bs-toggle="modal" data-bs-target="#modalMessage"> -->
+                <button type="button" class="check-all btn btn-primary" id="check-all">
+                    <i class="check-all bi bi-check2-all"></i>
                 </button>
-                <button type="button" class="btn btn-primary" id="clear-all" data-bs-toggle="modal" data-bs-target="#modalMessage">
-                    <i class="bi bi-eraser"></i>
+                <!-- <button type="button" class="btn btn-primary" id="clear-all" data-bs-toggle="modal" data-bs-target="#modalMessage"> -->
+                <button type="button" class="clear-all btn btn-primary" id="clear-all">
+                    <i class="clear-all bi bi-eraser"></i>
                 </button>
             </div>
         </div>

@@ -35,6 +35,7 @@ const refreshApp = () => {
             if (logMessagesEnabled) console.log("refreshApp():", "list:", lists[i].listName, "id:", i);
             getEl(templateIDs.todoCheck + i).checked = false; //TODO: function to check if all tasks in list are completed
             getEl(templateIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
+            getEl(templateIDs.textDesc + i).onclick = selectionClick;
             getEl(templateIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
         }
     }
@@ -45,6 +46,7 @@ const refreshApp = () => {
             if (logMessagesEnabled) console.log("refreshApp():", "task:", lists[idx].tasks[i], "id:", i);
             getEl(templateIDs.todoCheck + i).checked = lists[idx].tasks[i].finished;
             getEl(templateIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
+            getEl(templateIDs.textDesc + i).onclick = selectionClick;
             getEl(templateIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
         }
     }
@@ -72,18 +74,18 @@ const selectChange = (event) => {
     window.myDefaults.defaultList = event.srcElement.options.selectedIndex;
     if (localStorageEnabled) localStorage.setItem("myDefaults", window.myDefaults);
     if (logMessagesEnabled) console.log("selectChange():", window.myLists, window.myDefaults);
-    refreshApp(window.myLists, window.myDefaults);
+    refreshApp();
 };
 
 const addItemClick = (event) => {
-    if (event.target.id == "nav-list") {
+    if (event.target.id == domElements.navList) {
         window.myLists.push({
             listName: getEl(domElements.navInput).value,
             tasks: []
         });
         if (logMessagesEnabled) console.log("addItemClick():", "lista", window.myLists);
     }
-    if (event.target.id == "nav-task") {
+    if (event.target.id == domElements.navTask) {
         window.myLists[window.myDefaults.defaultList - 1].tasks.push({
             taskName: getEl(domElements.navInput).value,
             finished: false
@@ -91,7 +93,7 @@ const addItemClick = (event) => {
         if (logMessagesEnabled) console.log("addItemClick():", "task", window.myLists);
     }
     if (localStorageEnabled) localStorage.setItem("myLists", window.myLists);
-    refreshApp(window.myLists, window.myDefaults);
+    refreshApp();
 };
 
 const eraseTaskClick = (event) => {
@@ -102,7 +104,29 @@ const eraseTaskClick = (event) => {
         localStorage.setItem("myLists", window.myLists);
     }
     if (logMessagesEnabled) console.log("eraseTaskClick():", window.myLists);
-    refreshApp(window.myLists, window.myDefaults);
+    refreshApp();
+};
+
+const allTasksClick = (event) => {
+    let boolVal;
+    if (event.target.classList.contains(domElements.checkAll) == true) boolVal = true;
+    if (event.target.classList.contains(domElements.clearAll) == true) boolVal = false;
+    //if (event.target.id == domElements.clearAll) boolVal = false;
+    for (let i = 0; i < window.myLists[window.myDefaults.defaultList - 1].tasks.length; i++) {
+        window.myLists[window.myDefaults.defaultList - 1].tasks[i].finished = boolVal;
+    }
+    if (logMessagesEnabled) console.log("allTasksClick(2):", window.myLists, boolVal);
+    if (localStorageEnabled) localStorage.setItem("myLists", window.myLists);
+    refreshApp();
+};
+
+const selectionClick = (event) => {
+    console.log("test", window.selected);
+    if (window.selected != null || window.selected != undefined) {
+        window.selected.classList.remove("selected-border");
+    }
+    getEl(event.target.id).classList.add("selected-border");
+    window.selected = getEl(event.target.id);
 };
 
 let auxFunctions = {
@@ -111,6 +135,8 @@ let auxFunctions = {
     selectChange,
     addItemClick,
     eraseTaskClick,
+    allTasksClick,
+    selectionClick,
     getEl
 };
 export default auxFunctions;
