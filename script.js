@@ -7,7 +7,8 @@ auxFunctions.getEl(domElements.navTask).onclick = auxFunctions.addItemClick;
 auxFunctions.getEl(domElements.navErase).onclick = auxFunctions.eraseTaskClick;
 auxFunctions.getEl(domElements.checkAll).onclick = auxFunctions.allTasksClick;
 auxFunctions.getEl(domElements.clearAll).onclick = auxFunctions.allTasksClick;
-
+auxFunctions.getEl(domElements.todoUp).onclick = auxFunctions.moveItemClick;
+auxFunctions.getEl(domElements.todoDown).onclick = auxFunctions.moveItemClick;
 
 window.myLists = auxFunctions.getData("myLists");
 window.myDefaults = auxFunctions.getData("myDefaults");

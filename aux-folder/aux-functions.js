@@ -115,18 +115,39 @@ const allTasksClick = (event) => {
     for (let i = 0; i < window.myLists[window.myDefaults.defaultList - 1].tasks.length; i++) {
         window.myLists[window.myDefaults.defaultList - 1].tasks[i].finished = boolVal;
     }
-    if (logMessagesEnabled) console.log("allTasksClick(2):", window.myLists, boolVal);
+    if (logMessagesEnabled) console.log("allTasksClick():", window.myLists, boolVal);
     if (localStorageEnabled) localStorage.setItem("myLists", window.myLists);
     refreshApp();
 };
 
 const selectionClick = (event) => {
-    console.log("test", window.selected);
     if (window.selected != null || window.selected != undefined) {
         window.selected.classList.remove("selected-border");
     }
     getEl(event.target.id).classList.add("selected-border");
     window.selected = getEl(event.target.id);
+    if (logMessagesEnabled) console.log("selectionClick()", event, window.selected);
+};
+
+const moveItemClick = (event) => {
+    let index = parseInt(window.selected.id[window.selected.id.length - 1]);
+    let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
+    window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 1);
+    if (logMessagesEnabled) console.log("moveItemClick(1)", item, index);
+    if (event.target.classList.contains(domElements.todoUp) == true) {
+        index = index > 0 ? index - 1 : index;
+        window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 0, item);
+    }
+    if (event.target.classList.contains(domElements.todoDown) == true) {
+        if (index < window.myLists[window.myDefaults.defaultList - 1].tasks.length - 1) {
+            index = index + 1;
+            window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 0, item);
+        } else {
+            window.myLists[window.myDefaults.defaultList - 1].tasks.push(item);
+        }
+    }
+    if (logMessagesEnabled) console.log("moveItemClick()", event, item, index);
+    refreshApp();
 };
 
 let auxFunctions = {
@@ -137,6 +158,7 @@ let auxFunctions = {
     eraseTaskClick,
     allTasksClick,
     selectionClick,
+    moveItemClick,
     getEl
 };
 export default auxFunctions;

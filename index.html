@@ -48,8 +48,8 @@
     <footer class="footer mt-auto p-2 fixed-bottom">
         <div class="container d-flex justify-content-center">
             <div class="todo-menu btn-group column" id="todo-menu">
-                <button type="button" class="btn btn-primary" id="todo-up"><i class="bi bi-caret-up-square"></i></button>
-                <button type="button" class="btn btn-primary" id="todo-down"><i class="bi bi-caret-down-square"></i></button>
+                <button type="button" class="todo-up btn btn-primary" id="todo-up"><i class="todo-up bi bi-caret-up-square"></i></button>
+                <button type="button" class="todo-down btn btn-primary" id="todo-down"><i class="todo-down bi bi-caret-down-square"></i></button>
                 <div class="btn-group dropup">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" id="todo-tools">
                         <i class="bi bi-wrench"></i>
@@ -57,14 +57,16 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" id="todo-borrar">Borrar</a></li>
                         <li><a class="dropdown-item" id="todo-copiar">Copiar</a></li>
-                        <li><a class="dropdown-item" id="todo-mover">Mover</a></li>
+                        <li><a class="dropdown-item" id="todo-mover">Cortar</a></li>
                         <li><a class="dropdown-item" id="todo-pegar">Pegar</a></li>
                         <li><a class="dropdown-item" id="todo-editar">Editar</a></li>
+                        <!-- 
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" id="todo-op1">Mover aca...</a></li>
-                        <li><a class="dropdown-item" id="todo-op2">Edicion lista...</a></li>
+                        <li><a class="dropdown-item" id="todo-op2">Edicion lista...</a></li> 
+                        -->
                     </ul>
                 </div>
             </div>
