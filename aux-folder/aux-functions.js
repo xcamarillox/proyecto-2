@@ -15,23 +15,38 @@ const getData = (myVar) => {
     if (!Array.isArray(myData) && myVar === "myLists") myData = [];
     if ((Array.isArray(myData) || typeof(myData) != "object") && myVar === "myDefaults") myData = {};
     // --------------Name and type check coupled-------------- //
-    if (logMessagesEnabled) console.log("myVar:", myVar, "myData:", myData);
+    if (logMessagesEnabled) console.log("getData():", "myVar:", myVar, "myData:", myData);
     return myData;
 };
 
-const refreshApp = (lists, defaults) => {
+const refreshApp = () => {
+    let lists = window.myLists;
+    let defaults = window.myDefaults;
     getEl(domElements.navInput).value = "";
-    getEl(domElements.todoList).innerHTML = "";
+    getEl(domElements.todoList).textContent = "";
+    getEl(domElements.navSelect).textContent = "";
     getEl(domElements.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList == 0 ? "selected" : "", "Mis Listas"));
     for (let i = 0; i < lists.length; i++) {
-        getEl(domElements.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList == i ? "selected" : "", lists[i].listName));
+        getEl(domElements.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList - 1 == i ? "selected" : "", lists[i].listName));
     }
-    for (let i = 0; i < lists[defaults.defaultList].tasks.length; i++) {
-        getEl(domElements.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(templateIDs, i));
-        if (logMessagesEnabled) console.log("task:", lists[defaults.defaultList].tasks[i], "id:", i);
-        getEl(templateIDs.todoCheck + i).checked = lists[defaults.defaultList].tasks[i].finished;
-        getEl(templateIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[defaults.defaultList].tasks[i].taskName);
-        getEl(templateIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[defaults.defaultList].tasks[i].taskName);
+    if (defaults.defaultList == 0) {
+        for (let i = 0; i < lists.length; i++) {
+            getEl(domElements.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(templateIDs, i));
+            if (logMessagesEnabled) console.log("refreshApp():", "list:", lists[i].listName, "id:", i);
+            getEl(templateIDs.todoCheck + i).checked = false; //TODO: function to check if all tasks in list are completed
+            getEl(templateIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
+            getEl(templateIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
+        }
+    }
+    if (defaults.defaultList > 0) {
+        let idx = defaults.defaultList - 1;
+        for (let i = 0; i < lists[idx].tasks.length; i++) {
+            getEl(domElements.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(templateIDs, i));
+            if (logMessagesEnabled) console.log("refreshApp():", "task:", lists[idx].tasks[i], "id:", i);
+            getEl(templateIDs.todoCheck + i).checked = lists[idx].tasks[i].finished;
+            getEl(templateIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
+            getEl(templateIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
+        }
     }
 };
 
@@ -51,12 +66,18 @@ const getTaskTemplate = (ids, index) => {
 
 const getSelectTemplate = (selected, list) => {
     return `<option ${selected}>${list}</option>`;
-    //return ``;
+};
+
+const selectChange = (event) => {
+    window.myDefaults.defaultList = event.srcElement.options.selectedIndex;
+    if (logMessagesEnabled) console.log("selectChange()", window.myLists, window.myDefaults);
+    refreshApp(window.myLists, window.myDefaults);
 };
 
 let auxFunctions = {
     getData,
     refreshApp,
+    selectChange,
     getEl
 };
 export default auxFunctions;
