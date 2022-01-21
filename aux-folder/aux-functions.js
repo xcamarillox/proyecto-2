@@ -70,7 +70,38 @@ const getSelectTemplate = (selected, list) => {
 
 const selectChange = (event) => {
     window.myDefaults.defaultList = event.srcElement.options.selectedIndex;
-    if (logMessagesEnabled) console.log("selectChange()", window.myLists, window.myDefaults);
+    if (localStorageEnabled) localStorage.setItem("myDefaults", window.myDefaults);
+    if (logMessagesEnabled) console.log("selectChange():", window.myLists, window.myDefaults);
+    refreshApp(window.myLists, window.myDefaults);
+};
+
+const addItemClick = (event) => {
+    if (event.target.id == "nav-list") {
+        window.myLists.push({
+            listName: getEl(domElements.navInput).value,
+            tasks: []
+        });
+        if (logMessagesEnabled) console.log("addItemClick():", "lista", window.myLists);
+    }
+    if (event.target.id == "nav-task") {
+        window.myLists[window.myDefaults.defaultList - 1].tasks.push({
+            taskName: getEl(domElements.navInput).value,
+            finished: false
+        });
+        if (logMessagesEnabled) console.log("addItemClick():", "task", window.myLists);
+    }
+    if (localStorageEnabled) localStorage.setItem("myLists", window.myLists);
+    refreshApp(window.myLists, window.myDefaults);
+};
+
+const eraseTaskClick = (event) => {
+    window.myLists.splice(window.myDefaults.defaultList - 1, 1);
+    window.myDefaults.defaultList = 0;
+    if (localStorageEnabled) {
+        localStorage.setItem("myDefaults", window.myDefaults);
+        localStorage.setItem("myLists", window.myLists);
+    }
+    if (logMessagesEnabled) console.log("eraseTaskClick():", window.myLists);
     refreshApp(window.myLists, window.myDefaults);
 };
 
@@ -78,6 +109,8 @@ let auxFunctions = {
     getData,
     refreshApp,
     selectChange,
+    addItemClick,
+    eraseTaskClick,
     getEl
 };
 export default auxFunctions;
