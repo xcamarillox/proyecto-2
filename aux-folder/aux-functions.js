@@ -153,23 +153,31 @@ const allTasksClick = (event) => {
 };
 
 const moveItemClick = (event) => {
+    let item, list;
     let index = window.selectedItemIndex;
     if (index == null) return;
-    let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
-    window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 1);
+    if (window.myDefaults.defaultList == 0) {
+        item = window.myLists[window.selectedItemIndex];
+        list = window.myLists;
+    }
+    if (window.myDefaults.defaultList > 0) {
+        item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
+        list = window.myLists[window.myDefaults.defaultList - 1].tasks;
+    }
+    list.splice(index, 1);
     if (event.target.classList.contains(domE.todoUp) == true) {
         index = index > 0 ? index - 1 : index;
-        window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 0, item);
+        list.splice(index, 0, item);
     }
     if (event.target.classList.contains(domE.todoDown) == true) {
-        if (index < window.myLists[window.myDefaults.defaultList - 1].tasks.length - 1) {
+        if (index < list.length - 1) {
             index = index + 1;
-            window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 0, item);
+            list.splice(index, 0, item);
         } else {
-            window.myLists[window.myDefaults.defaultList - 1].tasks.push(item);
+            list.push(item);
         }
     }
-    if (logMessagesEnabled) console.log("moveItemClick()", event, item, index);
+    if (logMessagesEnabled) console.log("moveItemClick()", item, index, window.myLists);
     refreshApp();
 };
 
@@ -198,6 +206,10 @@ const pasteTaskClick = (event) => {
     //refreshApp();
 };
 
+const editTaskClick = (event) => {
+
+};
+
 const getSelectedIndex = (id) => {
     let index;
     try {
@@ -224,6 +236,7 @@ let auxFunctions = {
     eraseTaskClick,
     copyCutTaskClick,
     pasteTaskClick,
+    editTaskClick,
     getEl
 };
 export default auxFunctions;
