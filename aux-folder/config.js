@@ -6,12 +6,10 @@ let configVars = {
 
 
 let domElements = {
-    templateIDs: {
-        todoCheck: "todo-check",
-        textDesc: "text-desc",
-        textareaDesc: "textarea-desc",
-        todoCheckDiv: "todo-check-div"
-    },
+    todoCheck: "todo-check",
+    textDesc: "text-desc",
+    textareaDesc: "textarea-desc",
+    todoCheckDiv: "todo-check-div",
     navInput: "nav-input",
     navAdd: "nav-add",
     navTask: "nav-task",

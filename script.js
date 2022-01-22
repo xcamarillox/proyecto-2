@@ -3,8 +3,8 @@ import { configVars, domElements as domE } from './aux-folder/config.js';
 
 window.myLists = auxF.getData("myLists");
 window.myDefaults = auxF.getData("myDefaults");
-window.selectedIndex = null;
-window.copiedOrCutted = null;
+window.selectedItemIndex = null;
+window.copyCutItemID = null;
 
 auxF.getEl(domE.navSelect).onchange = auxF.selectChange;
 auxF.getEl(domE.navList).onclick = auxF.addItemClick;

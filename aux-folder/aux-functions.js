@@ -4,7 +4,6 @@ import { configVars, domElements as domE } from './config.js';
 let dummyDataEnabled = configVars.dummyDataEnabled;
 let localStorageEnabled = configVars.localStorageEnabled;
 let logMessagesEnabled = configVars.logMessagesEnabled;
-let tIDs = domE.templateIDs;
 
 const getData = (myVar) => {
     let myData;
@@ -26,48 +25,54 @@ const refreshApp = () => {
     for (let i = 0; i < lists.length; i++) {
         getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList - 1 == i ? "selected" : "", lists[i].listName));
     }
+    let item;
     if (defaults.defaultList == 0) {
-        for (let i = 0; i < lists.length; i++) {
-            getEl(domE.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(tIDs, i));
-            if (logMessagesEnabled) console.log("refreshApp():", "list:", lists[i].listName, "id:", i);
-            getEl(tIDs.todoCheck + i).checked = false; //TODO: function to check if all tasks in list are completed
-            getEl(tIDs.todoCheck + i).disabled = true;
-            getEl(tIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
-            getEl(tIDs.textDesc + i).onclick = selectionClick;
-            getEl(tIDs.todoCheck + i).onclick = selectionClick;
-            getEl(tIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
-            getEl(tIDs.textareaDesc + i).style.display = "none";
-        }
+        item = lists;
+        getEl(domE.navTask).style.display = "none";
+        getEl(domE.navErase).disabled = true;
     }
     if (defaults.defaultList > 0) {
-        let idx = defaults.defaultList - 1;
-        for (let i = 0; i < lists[idx].tasks.length; i++) {
-            getEl(domE.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(tIDs, i));
-            if (logMessagesEnabled) console.log("refreshApp():", "task:", lists[idx].tasks[i], "id:", i);
-            getEl(tIDs.todoCheck + i).checked = lists[idx].tasks[i].finished;
-            getEl(tIDs.textDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
-            getEl(tIDs.textDesc + i).onclick = selectionClick;
-            getEl(tIDs.todoCheck + i).onclick = selectionClick;
-            getEl(tIDs.textareaDesc + i).insertAdjacentHTML('beforeend', lists[idx].tasks[i].taskName);
-            getEl(tIDs.textareaDesc + i).style.display = "none";
+        item = lists[defaults.defaultList - 1].tasks;
+        getEl(domE.navTask).style.display = "block";
+        getEl(domE.navErase).disabled = false;
+    }
+    if (logMessagesEnabled) console.log("refreshApp():", "item:", item);
+    for (let i = 0; i < item.length; i++) {
+        getEl(domE.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(domE, i));
+        // ********************LISTAS
+        if (defaults.defaultList == 0) {
+            getEl(domE.todoCheck + i).checked = false; //TODO: function to check if all tasks in list are completed
+            getEl(domE.todoCheck + i).disabled = true;
+            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
+            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
         }
+        // ********************TAREAS
+        if (defaults.defaultList > 0) {
+            getEl(domE.todoCheck + i).checked = item[i].finished;
+            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
+            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
+        }
+        getEl(domE.textDesc + i).onclick = selectionClick;
+        getEl(domE.todoCheck + i).onclick = selectionClick;
+        getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
+        getEl(domE.textareaDesc + i).style.display = "none";
     }
 };
 
 const selectionClick = (event) => {
     let index;
-    if (window.selectedIndex != null || window.selectedIndex != undefined) {
-        index = window.selectedIndex;
-        getEl(tIDs.textDesc + index).classList.remove("selected-border");
-        getEl(tIDs.textareaDesc + index).classList.remove("selected-border");
-        getEl(tIDs.todoCheckDiv + index).classList.remove("selected-border-check");
+    if (window.selectedItemIndex != null || window.selectedItemIndex != undefined) {
+        index = window.selectedItemIndex;
+        getEl(domE.textDesc + index).classList.remove("selected-border");
+        getEl(domE.textareaDesc + index).classList.remove("selected-border");
+        getEl(domE.todoCheckDiv + index).classList.remove("selected-border-check");
     }
-    window.selectedIndex = getSelectedIndex(event.target.id);
-    index = window.selectedIndex;
-    getEl(tIDs.textDesc + index).classList.add("selected-border");
-    getEl(tIDs.textareaDesc + index).classList.add("selected-border");
-    getEl(tIDs.todoCheckDiv + index).classList.add("selected-border-check");
-    if (logMessagesEnabled) console.log("selectionClick(2)", event, window.selectedIndex);
+    window.selectedItemIndex = getSelectedIndex(event.target.id);
+    index = window.selectedItemIndex;
+    getEl(domE.textDesc + index).classList.add("selected-border");
+    getEl(domE.textareaDesc + index).classList.add("selected-border");
+    getEl(domE.todoCheckDiv + index).classList.add("selected-border-check");
+    if (logMessagesEnabled) console.log("selectionClick(2)", event, window.selectedItemIndex);
 };
 
 const getTaskTemplate = (ids, index) => {
@@ -92,6 +97,10 @@ const selectChange = (event) => {
 };
 
 const addItemClick = (event) => {
+    if (getEl(domE.navInput).value.trim() == "") {
+        getEl(domE.navInput).value = "";
+        return;
+    }
     if (event.target.id == domE.navList) {
         window.myLists.push({
             listName: getEl(domE.navInput).value,
@@ -107,6 +116,7 @@ const addItemClick = (event) => {
         if (logMessagesEnabled) console.log("addItemClick():", "task", window.myLists);
     }
     if (localStorageEnabled) localStorage.setItem("myLists", window.myLists);
+    getEl(domE.navInput).value = "";
     refreshApp();
 };
 
@@ -135,7 +145,7 @@ const allTasksClick = (event) => {
 };
 
 const moveItemClick = (event) => {
-    let index = window.selectedIndex;
+    let index = window.selectedItemIndex;
     if (index == null) return;
     let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
     window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 1);
@@ -156,7 +166,7 @@ const moveItemClick = (event) => {
 };
 
 const eraseTaskClick = (event) => {
-    let index = window.selectedIndex;
+    let index = window.selectedItemIndex;
     if (index == null) return;
     let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
     window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 1);
@@ -165,7 +175,7 @@ const eraseTaskClick = (event) => {
 };
 
 const copyCutTaskClick = (event) => {
-    let index = window.selectedIndex;
+    let index = window.selectedItemIndex;
     if (index == null) return;
     let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
     if (logMessagesEnabled) console.log("copyTaskClick()", item, index);
@@ -173,7 +183,7 @@ const copyCutTaskClick = (event) => {
 };
 
 const pasteTaskClick = (event) => {
-    let index = window.selectedIndex();
+    let index = window.selectedItemIndex();
     if (index == null) return;
     let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
     if (logMessagesEnabled) console.log("copyTaskClick()", item, index);
