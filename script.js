@@ -1,17 +1,21 @@
-import auxFunctions from './aux-folder/aux-functions.js';
-import { configVars, domElements } from './aux-folder/config.js';
+import auxF from './aux-folder/aux-functions.js'; // auxFunctions
+import { configVars, domElements as domE } from './aux-folder/config.js';
 
-auxFunctions.getEl(domElements.navSelect).onchange = auxFunctions.selectChange;
-auxFunctions.getEl(domElements.navList).onclick = auxFunctions.addItemClick;
-auxFunctions.getEl(domElements.navTask).onclick = auxFunctions.addItemClick;
-auxFunctions.getEl(domElements.navErase).onclick = auxFunctions.eraseTaskClick;
-auxFunctions.getEl(domElements.checkAll).onclick = auxFunctions.allTasksClick;
-auxFunctions.getEl(domElements.clearAll).onclick = auxFunctions.allTasksClick;
-auxFunctions.getEl(domElements.todoUp).onclick = auxFunctions.moveItemClick;
-auxFunctions.getEl(domElements.todoDown).onclick = auxFunctions.moveItemClick;
+window.myLists = auxF.getData("myLists");
+window.myDefaults = auxF.getData("myDefaults");
+window.selectedIndex = null;
+window.copiedOrCutted = null;
 
-window.myLists = auxFunctions.getData("myLists");
-window.myDefaults = auxFunctions.getData("myDefaults");
+auxF.getEl(domE.navSelect).onchange = auxF.selectChange;
+auxF.getEl(domE.navList).onclick = auxF.addItemClick;
+auxF.getEl(domE.navTask).onclick = auxF.addItemClick;
+auxF.getEl(domE.navErase).onclick = auxF.eraseListClick;
+auxF.getEl(domE.checkAll).onclick = auxF.allTasksClick;
+auxF.getEl(domE.clearAll).onclick = auxF.allTasksClick;
+auxF.getEl(domE.todoUp).onclick = auxF.moveItemClick;
+auxF.getEl(domE.todoDown).onclick = auxF.moveItemClick;
+auxF.getEl(domE.todoBorrar).onclick = auxF.eraseTaskClick;
+auxF.getEl(domE.todoCopiar).onclick = auxF.copyCutTaskClick;
+auxF.getEl(domE.todoCortar).onclick = auxF.copyCutTaskClick;
 
-
-auxFunctions.refreshApp(myLists, myDefaults);
+auxF.refreshApp(myLists, myDefaults);

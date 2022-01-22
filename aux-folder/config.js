@@ -9,7 +9,8 @@ let domElements = {
     templateIDs: {
         todoCheck: "todo-check",
         textDesc: "text-desc",
-        textareaDesc: "textarea-desc"
+        textareaDesc: "textarea-desc",
+        todoCheckDiv: "todo-check-div"
     },
     navInput: "nav-input",
     navAdd: "nav-add",
@@ -24,11 +25,9 @@ let domElements = {
     todoTools: "todo-tools",
     todoBorrar: "todo-borrar",
     todoCopiar: "todo-copiar",
-    todoMover: "todo-mover",
+    todoCortar: "todo-cortar",
     todoPegar: "todo-pegar",
     todoEditar: "todo-editar",
-    todoOp1: "todo-op1",
-    todoOp2: "todo-op2",
     checkMenu: "check-menu",
     checkAll: "check-all",
     clearAll: "clear-all",

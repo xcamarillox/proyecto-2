@@ -56,42 +56,15 @@ let dummyLists = [{
 ];
 
 let dummyErrorLists = [{
-        listName: "Propositos de año nuevo",
-        tasks: [{
-                taskName: "hacer deporte",
-                finished: false
-            },
-            {
-                taskName: "aprender ingles",
-                finished: true
-            },
-            {
-                taskName: "dejar de fumar",
-                finished: false
-            }
-        ]
+        tasks: 40,
     },
     {
         listName: "Lista del super",
-        tasks: [{
-                taskName: "comprar leche",
-                finished: true
-            },
-            {
-                taskName: "comprar pan",
-                finished: true
-            },
-            {
-                taskName: "pagar la luz",
-                finished: false
-            }
-        ]
     },
     {
-        listName: "Hacer diario",
         tasks: [{
                 taskName: "Ir al trabajo",
-                finished: true
+                finished: 40
             },
             {
                 taskName: "Aprender React",

@@ -59,7 +59,14 @@ div.todo-check {
 
 .selected-border {
     border-color: rgb(13, 110, 253);
-    border-width: 3px;
+    color: rgb(1, 76, 189);
+    border-width: 2px;
+}
+
+.selected-border-check {
+    border-color: rgb(13, 110, 253);
+    border-style: solid none solid solid;
+    border-width: 2px;
 }
 
 div.todo-menu {
