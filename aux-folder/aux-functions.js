@@ -21,39 +21,44 @@ const refreshApp = () => {
     let defaults = window.myDefaults;
     getEl(domE.todoList).textContent = "";
     getEl(domE.navSelect).textContent = "";
-    getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList == 0 ? "selected" : "", "*** MIS LISTAS ***"));
+    getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate("***   MIS LISTAS  ***"));
     for (let i = 0; i < lists.length; i++) {
-        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(defaults.defaultList - 1 == i ? "selected" : "", lists[i].listName));
+        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectTemplate(lists[i].listName));
     }
+    getEl(domE.navSelect).options[defaults.defaultList].selected = true;
     let item;
     if (defaults.defaultList == 0) {
         item = lists;
         getEl(domE.navTask).style.display = "none";
         getEl(domE.navErase).disabled = true;
+        getEl(domE.checkAll).disabled = true;
+        getEl(domE.clearAll).disabled = true;
     }
     if (defaults.defaultList > 0) {
         item = lists[defaults.defaultList - 1].tasks;
         getEl(domE.navTask).style.display = "block";
         getEl(domE.navErase).disabled = false;
+        getEl(domE.checkAll).disabled = false;
+        getEl(domE.clearAll).disabled = false;
     }
     if (logMessagesEnabled) console.log("refreshApp():", "item:", item);
     for (let i = 0; i < item.length; i++) {
         getEl(domE.todoList).insertAdjacentHTML('beforeend', getTaskTemplate(domE, i));
-        // ********************LISTAS
+        // ******************** LISTAS ********************
         if (defaults.defaultList == 0) {
-            getEl(domE.todoCheck + i).checked = false; //TODO: function to check if all tasks in list are completed
-            getEl(domE.todoCheck + i).disabled = true;
+            getEl(domE.todoCheckbox + i).checked = false; //TODO: function to check if all tasks in list are completed
+            getEl(domE.todoCheckbox + i).disabled = true;
             getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
             getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
         }
-        // ********************TAREAS
+        // ******************** TAREAS ********************
         if (defaults.defaultList > 0) {
-            getEl(domE.todoCheck + i).checked = item[i].finished;
+            getEl(domE.todoCheckbox + i).checked = item[i].finished;
             getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
             getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
         }
         getEl(domE.textDesc + i).onclick = selectionClick;
-        getEl(domE.todoCheck + i).onclick = selectionClick;
+        getEl(domE.todoCheckbox + i).onclick = selectionClick;
         getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
         getEl(domE.textareaDesc + i).style.display = "none";
     }
@@ -69,24 +74,28 @@ const selectionClick = (event) => {
     }
     window.selectedItemIndex = getSelectedIndex(event.target.id);
     index = window.selectedItemIndex;
+    if (event.target.classList.contains(domE.todoCheckbox) == true) {
+        window.myLists[window.myDefaults.defaultList - 1].tasks[index].finished = event.target.checked;
+        if (localStorageEnabled) localStorage.setItem("myDefaults", window.myLists);
+    }
     getEl(domE.textDesc + index).classList.add("selected-border");
     getEl(domE.textareaDesc + index).classList.add("selected-border");
     getEl(domE.todoCheckDiv + index).classList.add("selected-border-check");
-    if (logMessagesEnabled) console.log("selectionClick(2)", event, window.selectedItemIndex);
+    if (logMessagesEnabled) console.log("selectionClick()", event, window.selectedItemIndex, window.myLists);
 };
 
 const getTaskTemplate = (ids, index) => {
     return `<div class="todolist-item input-group">
                 <div class="todo-check input-group-text" id="${ids.todoCheckDiv + index}">
-                    <input class="form-check-input" type="checkbox" value="" id="${ids.todoCheck + index}">
+                    <input class="todo-checkbox form-check-input" type="checkbox" value="" id="${ids.todoCheckbox + index}">
                 </div>
                 <textarea class="form-control" id="${ids.textareaDesc + index}"></textarea>
                 <div class="text-desc form-control" id="${ids.textDesc + index}"></div>
             </div>`;
 };
 
-const getSelectTemplate = (selected, list) => {
-    return `<option ${selected}>${list}</option>`;
+const getSelectTemplate = (list) => {
+    return `<option>${list}</option>`;
 };
 
 const selectChange = (event) => {
@@ -102,14 +111,14 @@ const addItemClick = (event) => {
         return;
     }
     if (event.target.id == domE.navList) {
-        window.myLists.push({
+        window.myLists.unshift({
             listName: getEl(domE.navInput).value,
             tasks: []
         });
         if (logMessagesEnabled) console.log("addItemClick():", "lista", window.myLists);
     }
     if (event.target.id == domE.navTask) {
-        window.myLists[window.myDefaults.defaultList - 1].tasks.push({
+        window.myLists[window.myDefaults.defaultList - 1].tasks.unshift({
             taskName: getEl(domE.navInput).value,
             finished: false
         });
@@ -135,7 +144,6 @@ const allTasksClick = (event) => {
     let boolVal;
     if (event.target.classList.contains(domE.checkAll) == true) boolVal = true;
     if (event.target.classList.contains(domE.clearAll) == true) boolVal = false;
-    //if (event.target.id == domE.clearAll) boolVal = false;
     for (let i = 0; i < window.myLists[window.myDefaults.defaultList - 1].tasks.length; i++) {
         window.myLists[window.myDefaults.defaultList - 1].tasks[i].finished = boolVal;
     }
