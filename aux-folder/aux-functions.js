@@ -181,29 +181,60 @@ const moveItemClick = (event) => {
     refreshApp();
 };
 
-const eraseTaskClick = (event) => {
+const eraseTaskClick = () => {
+    let item;
     let index = window.selectedItemIndex;
     if (index == null) return;
-    let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
-    window.myLists[window.myDefaults.defaultList - 1].tasks.splice(index, 1);
+    if (window.myDefaults.defaultList == 0) {
+        item = window.myLists;
+    }
+    if (window.myDefaults.defaultList > 0) {
+        item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
+    }
+    item.splice(index, 1);
     if (logMessagesEnabled) console.log("eraseTaskClick()", item, index);
     refreshApp();
 };
 
 const copyCutTaskClick = (event) => {
+    let item;
     let index = window.selectedItemIndex;
     if (index == null) return;
-    let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
-    if (logMessagesEnabled) console.log("copyTaskClick()", item, index);
-    //refreshApp();
+    if (window.myDefaults.defaultList == 0) {
+        item = window.myLists[index];
+    }
+    if (window.myDefaults.defaultList > 0) {
+        item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
+    }
+    window.copyCutItem = {
+        itemIndex: index,
+        item: item,
+        listIndex: window.myDefaults.defaultList,
+        comand: event.target.id
+    };
+    if (logMessagesEnabled) console.log("copyCutTaskClick()", window.copyCutItem);
 };
 
-const pasteTaskClick = (event) => {
-    let index = window.selectedItemIndex();
-    if (index == null) return;
-    let item = window.myLists[window.myDefaults.defaultList - 1].tasks[index];
-    if (logMessagesEnabled) console.log("copyTaskClick()", item, index);
-    //refreshApp();
+const pasteTaskClick = () => {
+    let listType, itemIndex;
+    if (window.myDefaults.defaultList != 0 && window.copyCutItem.listIndex == 0) return;
+    if (window.myDefaults.defaultList == 0) {
+        listType = window.myLists;
+    }
+    if (window.myDefaults.defaultList > 0) {
+        listType = window.myLists[window.myDefaults.defaultList - 1].tasks;
+        //listType = window.myLists;
+    }
+    listType.unshift(window.copyCutItem.item);
+    itemIndex = window.copyCutItem.itemIndex;
+    if (window.copyCutItem.comand == "todo-cortar" && window.myDefaults.defaultList == 0) {
+        window.myLists.splice(itemIndex + 1, 1);
+    }
+    if (window.copyCutItem.comand == "todo-cortar" && window.myDefaults.defaultList > 0) {
+        window.myLists[window.copyCutItem.listIndex - 1].tasks.splice(window.myDefaults.defaultList == window.copyCutItem.listIndex ? itemIndex + 1 : itemIndex, 1);
+    }
+    if (logMessagesEnabled) console.log("pasteTaskClick()", listType);
+    refreshApp();
 };
 
 const editTaskClick = (event) => {
