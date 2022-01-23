@@ -51,6 +51,7 @@ textarea {
 textarea.form-control {
     resize: none;
     background-color: rgb(248, 252, 214) !important;
+    color: black;
 }
 
 div.todo-check {

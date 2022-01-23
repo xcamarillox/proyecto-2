@@ -59,20 +59,23 @@ const refreshApp = () => {
         }
         getEl(domE.textDesc + i).onclick = selectionClick;
         getEl(domE.todoCheckbox + i).onclick = selectionClick;
-        getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
         getEl(domE.textareaDesc + i).style.display = "none";
     }
 };
 
 const selectionClick = (event) => {
-    let index;
-    if (window.selectedItemIndex != null || window.selectedItemIndex != undefined) {
-        index = window.selectedItemIndex;
-        getEl(domE.textDesc + index).classList.remove("selected-border");
-        getEl(domE.textareaDesc + index).classList.remove("selected-border");
-        getEl(domE.todoCheckDiv + index).classList.remove("selected-border-check");
+    let index = window.selectedItemIndex;
+    if (getEl(domE.todoEditar).textContent == "Editar OK") {
+        if (window.myDefaults.defaultList == 0) {
+            window.myLists[index].listName = getEl(domE.textareaDesc + index).value;
+        }
+        if (window.myDefaults.defaultList > 0) {
+            window.myLists[window.myDefaults.defaultList - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
+        }
+        getEl(domE.todoEditar).textContent = "Editar";
     }
-    window.selectedItemIndex = getSelectedIndex(event.target.id);
+    refreshApp();
+    window.selectedItemIndex = getSelectedItemIndex(event.target.id);
     index = window.selectedItemIndex;
     if (event.target.classList.contains(domE.todoCheckbox) == true) {
         window.myLists[window.myDefaults.defaultList - 1].tasks[index].finished = event.target.checked;
@@ -237,11 +240,27 @@ const pasteTaskClick = () => {
     refreshApp();
 };
 
-const editTaskClick = (event) => {
-
+const editTaskClick = () => {
+    let index = window.selectedItemIndex;
+    if (getEl(domE.todoEditar).textContent == "Editar") {
+        getEl(domE.textDesc + index).style.display = "none";
+        getEl(domE.textareaDesc + index).style.display = "block";
+        getEl(domE.todoEditar).textContent = "Editar OK";
+    } else {
+        getEl(domE.textDesc + index).style.display = "block";
+        getEl(domE.textareaDesc + index).style.display = "none";
+        getEl(domE.todoEditar).textContent = "Editar";
+        getEl(domE.textDesc + index).textContent = getEl(domE.textareaDesc + index).value;
+        if (window.myDefaults.defaultList == 0) {
+            window.myLists[index].listName = getEl(domE.textareaDesc + index).value;
+        }
+        if (window.myDefaults.defaultList > 0) {
+            window.myLists[window.myDefaults.defaultList - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
+        }
+    }
 };
 
-const getSelectedIndex = (id) => {
+const getSelectedItemIndex = (id) => {
     let index;
     try {
         index = parseInt(id[id.length - 1]);

@@ -18,5 +18,6 @@ auxF.getEl(domE.todoBorrar).onclick = auxF.eraseTaskClick;
 auxF.getEl(domE.todoCopiar).onclick = auxF.copyCutTaskClick;
 auxF.getEl(domE.todoCortar).onclick = auxF.copyCutTaskClick;
 auxF.getEl(domE.todoPegar).onclick = auxF.pasteTaskClick;
+auxF.getEl(domE.todoEditar).onclick = auxF.editTaskClick;
 
 auxF.refreshApp(myLists, myDefaults);
