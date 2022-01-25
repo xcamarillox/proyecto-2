@@ -1,9 +1,5 @@
-let dummyDefaults = {
-    defaultList: 1
-};
-let dummyErrorDefaults = {
-    defaultList: 1
-};
+let dummyDefaultListIndex = 1;
+let dummyErrorDefaultListIndex = "NotANumber";
 
 let dummyLists = [{
         listName: "Propositos de año nuevo",
@@ -80,4 +76,4 @@ let dummyErrorLists = [{
 
 
 
-export { dummyLists, dummyDefaults, dummyErrorLists, dummyErrorDefaults };
+export { dummyLists, dummyDefaultListIndex, dummyErrorLists, dummyErrorDefaultListIndex };

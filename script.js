@@ -1,23 +1,23 @@
 import auxF from './aux-folder/aux-functions.js'; // auxFunctions
-import { configVars, domElements as domE } from './aux-folder/config.js';
+import { domElements as domE } from './aux-folder/config.js';
 
-window.myLists = auxF.getData("myLists");
-window.myDefaults = auxF.getData("myDefaults");
+window.lists = auxF.getData("myLists");
+window.defaultListIndex = auxF.getData("myDefaultListIndex");
 window.selectedItemIndex = null;
-window.copyCutItemID = null;
+window.copyCutItem = null;
 
-auxF.getEl(domE.navSelect).onchange = auxF.selectChange;
-auxF.getEl(domE.navList).onclick = auxF.addItemClick;
-auxF.getEl(domE.navTask).onclick = auxF.addItemClick;
-auxF.getEl(domE.navErase).onclick = auxF.eraseListClick;
-auxF.getEl(domE.checkAll).onclick = auxF.allTasksClick;
-auxF.getEl(domE.clearAll).onclick = auxF.allTasksClick;
-auxF.getEl(domE.todoUp).onclick = auxF.moveItemClick;
-auxF.getEl(domE.todoDown).onclick = auxF.moveItemClick;
-auxF.getEl(domE.todoBorrar).onclick = auxF.eraseTaskClick;
-auxF.getEl(domE.todoCopiar).onclick = auxF.copyCutTaskClick;
-auxF.getEl(domE.todoCortar).onclick = auxF.copyCutTaskClick;
-auxF.getEl(domE.todoPegar).onclick = auxF.pasteTaskClick;
-auxF.getEl(domE.todoEditar).onclick = auxF.editTaskClick;
+document.getElementById(domE.navSelect).onchange = auxF.selectListChange;
+document.getElementById(domE.navList).onclick = auxF.addItemClick;
+document.getElementById(domE.navTask).onclick = auxF.addItemClick;
+document.getElementById(domE.navErase).onclick = auxF.eraseListClick;
+document.getElementById(domE.checkAll).onclick = auxF.allItemsClick;
+document.getElementById(domE.clearAll).onclick = auxF.allItemsClick;
+document.getElementById(domE.todoUp).onclick = auxF.moveItemClick;
+document.getElementById(domE.todoDown).onclick = auxF.moveItemClick;
+document.getElementById(domE.todoBorrar).onclick = auxF.eraseItemClick;
+document.getElementById(domE.todoCopiar).onclick = auxF.copyCutItemClick;
+document.getElementById(domE.todoCortar).onclick = auxF.copyCutItemClick;
+document.getElementById(domE.todoPegar).onclick = auxF.pasteItemClick;
+document.getElementById(domE.todoEditar).onclick = auxF.editItemClick;
 
-auxF.refreshApp(myLists, myDefaults);
+auxF.refreshApp();
