@@ -11,53 +11,52 @@ const getData = (myVar) => {
     else if ("myLists" === myVar && dummyDataEnabled) myData = dummyLists;
     else if ("myDefaultListIndex" === myVar && dummyDataEnabled) myData = dummyDefaultListIndex;
     if (!Array.isArray(myData) && myVar === "myLists") myData = [];
-    if (!isNaN(myVar) && myVar === "myDefaultListIndex") myData = 0;
+    if (isNaN(myData) && myVar === "myDefaultListIndex") myData = 0;
     if (logMessagesEnabled) console.log("getData():", "myVar:", myVar, "myData:", myData);
     return myData;
 };
 
 const refreshApp = () => {
     let lists = window.lists;
-    let defaults = window.defaultListIndex;
+    let defaultIndex = window.defaultListIndex;
     getEl(domE.todoList).textContent = "";
     getEl(domE.navSelect).textContent = "";
     getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("***   MIS LISTAS  ***"));
     for (let i = 0; i < lists.length; i++) {
         getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(lists[i].listName));
     }
-    getEl(domE.navSelect).options[defaults].selected = true;
-    let item;
-    if (defaults == 0) {
-        item = lists;
+    getEl(domE.navSelect).options[defaultIndex].selected = true;
+    if (defaultIndex == 0) {
+        lists = lists;
         getEl(domE.navTask).style.display = "none";
         getEl(domE.todoCortar).style.display = "none";
         getEl(domE.navErase).disabled = true;
         getEl(domE.checkAll).disabled = true;
         getEl(domE.clearAll).disabled = true;
     }
-    if (defaults > 0) {
-        item = lists[defaults - 1].tasks;
+    if (defaultIndex > 0) {
+        lists = lists[defaultIndex - 1].tasks;
         getEl(domE.navTask).style.display = "block";
         getEl(domE.todoCortar).style.display = "block";
         getEl(domE.navErase).disabled = false;
         getEl(domE.checkAll).disabled = false;
         getEl(domE.clearAll).disabled = false;
     }
-    if (logMessagesEnabled) console.log("refreshApp():", "item:", item);
-    for (let i = 0; i < item.length; i++) {
+    if (logMessagesEnabled) console.log("refreshApp():", "item:", lists);
+    for (let i = 0; i < lists.length; i++) {
         getEl(domE.todoList).insertAdjacentHTML('beforeend', getItemHtmlTemplate(domE, i));
         // ******************** LISTAS ********************
-        if (defaults == 0) {
+        if (defaultIndex == 0) {
             getEl(domE.todoCheckbox + i).checked = false; //TODO: function to check if all tasks in list are completed
             getEl(domE.todoCheckbox + i).disabled = true;
-            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
-            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].listName);
+            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
+            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
         }
         // ******************** TAREAS ********************
-        if (defaults > 0) {
-            getEl(domE.todoCheckbox + i).checked = item[i].finished;
-            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
-            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', item[i].taskName);
+        if (defaultIndex > 0) {
+            getEl(domE.todoCheckbox + i).checked = lists[i].finished;
+            getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', lists[i].taskName);
+            getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].taskName);
         }
         getEl(domE.textDesc + i).onclick = itemSelectionClick;
         getEl(domE.todoCheckbox + i).onclick = itemSelectionClick;
@@ -76,13 +75,16 @@ const itemSelectionClick = (event) => {
         }
         getEl(domE.todoEditar).textContent = "Editar";
     }
-    //refreshApp();
-    window.selectedItemIndex = getSelectedItemIndex(event.target.id);
-    index = window.selectedItemIndex;
-    if (event.target.classList.contains(domE.todoCheckbox) == true) {
+    if (!event.target.classList.contains(domE.todoCheckbox) &&
+        getSelectedItemIndex(event.target.id) == window.selectedItemIndex)
+        return;
+    index = getSelectedItemIndex(event.target.id);
+    if (event.target.classList.contains(domE.todoCheckbox)) {
         window.lists[window.defaultListIndex - 1].tasks[index].finished = event.target.checked;
         if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.lists);
+        if (index == window.selectedItemIndex) return;
     }
+    window.selectedItemIndex = index;
     refreshApp();
     getEl(domE.textDesc + index).classList.add("selected-border");
     getEl(domE.textareaDesc + index).classList.add("selected-border");
@@ -103,10 +105,10 @@ const staySelected = () => {
 };
 
 const selectListChange = (event) => {
+    window.selectedItemIndex = null;
     window.defaultListIndex = event.srcElement.options.selectedIndex;
     if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.defaultListIndex);
     if (logMessagesEnabled) console.log("selectListChange():", window.lists, window.defaultListIndex);
-    window.selectedItemIndex = null;
     refreshApp();
 };
 
@@ -147,8 +149,8 @@ const eraseListClick = (event) => {
 
 const allItemsClick = (event) => {
     let boolVal;
-    if (event.target.classList.contains(domE.checkAll) == true) boolVal = true;
-    if (event.target.classList.contains(domE.clearAll) == true) boolVal = false;
+    if (event.target.classList.contains(domE.checkAll)) boolVal = true;
+    if (event.target.classList.contains(domE.clearAll)) boolVal = false;
     for (let i = 0; i < window.lists[window.defaultListIndex - 1].tasks.length; i++) {
         window.lists[window.defaultListIndex - 1].tasks[i].finished = boolVal;
     }
@@ -170,12 +172,12 @@ const moveItemClick = (event) => {
         list = window.lists[window.defaultListIndex - 1].tasks;
     }
     list.splice(index, 1);
-    if (event.target.classList.contains(domE.todoUp) == true) {
+    if (event.target.classList.contains(domE.todoUp)) {
         index = index > 0 ? index - 1 : index;
         list.splice(index, 0, item);
         window.selectedItemIndex = index;
     }
-    if (event.target.classList.contains(domE.todoDown) == true) {
+    if (event.target.classList.contains(domE.todoDown)) {
         if (index < list.length - 1) {
             index = index + 1;
             list.splice(index, 0, item);
@@ -270,6 +272,7 @@ const editItemClick = () => {
             window.lists[window.defaultListIndex - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
         }
     }
+    if (logMessagesEnabled) console.log("editItemClick()");
 };
 
 const getItemHtmlTemplate = (ids, index) => {
