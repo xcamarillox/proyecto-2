@@ -10,8 +10,8 @@ const getData = (myVar) => {
     if (localStorageEnabled) myData = window.localStorage.getItem(myVar);
     else if ("myLists" === myVar && dummyDataEnabled) myData = dummyLists;
     else if ("myDefaultListIndex" === myVar && dummyDataEnabled) myData = dummyDefaultListIndex;
-    if (!Array.isArray(myData) && myVar === "myLists") myData = [];
-    if (isNaN(myData) && myVar === "myDefaultListIndex") myData = 0;
+    if (myVar === "myLists" && !Array.isArray(myData)) myData = [];
+    if (myVar === "myDefaultListIndex" && isNaN(myData)) myData = 0;
     if (logMessagesEnabled) console.log("getData():", "myVar:", myVar, "myData:", myData);
     return myData;
 };
@@ -27,7 +27,6 @@ const refreshApp = () => {
     }
     getEl(domE.navSelect).options[defaultIndex].selected = true;
     if (defaultIndex == 0) {
-        lists = lists;
         getEl(domE.navTask).style.display = "none";
         getEl(domE.todoCortar).style.display = "none";
         getEl(domE.navErase).disabled = true;
@@ -84,8 +83,8 @@ const itemSelectionClick = (event) => {
         if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.lists);
         if (index == window.selectedItemIndex) return;
     }
+    if (window.selectedItemIndex != null) refreshApp();
     window.selectedItemIndex = index;
-    refreshApp();
     getEl(domE.textDesc + index).classList.add("selected-border");
     getEl(domE.textareaDesc + index).classList.add("selected-border");
     getEl(domE.todoCheckDiv + index).classList.add("selected-border-check");
@@ -157,69 +156,70 @@ const allItemsClick = (event) => {
     if (logMessagesEnabled) console.log("allItemsClick():", window.lists, boolVal);
     if (localStorageEnabled) localStorage.setItem("myLists", window.lists);
     refreshApp();
+    staySelected();
 };
 
 const moveItemClick = (event) => {
-    let item, list;
-    let index = window.selectedItemIndex;
-    if (index == null) return;
+    if (window.selectedItemIndex == null) return;
+    let listItem, listType;
+    let itemIndex = window.selectedItemIndex;
     if (window.defaultListIndex == 0) {
-        item = window.lists[window.selectedItemIndex];
-        list = window.lists;
+        listItem = window.lists[itemIndex];
+        listType = window.lists;
     }
     if (window.defaultListIndex > 0) {
-        item = window.lists[window.defaultListIndex - 1].tasks[index];
-        list = window.lists[window.defaultListIndex - 1].tasks;
+        listItem = window.lists[window.defaultListIndex - 1].tasks[itemIndex];
+        listType = window.lists[window.defaultListIndex - 1].tasks;
     }
-    list.splice(index, 1);
+    listType.splice(itemIndex, 1);
     if (event.target.classList.contains(domE.todoUp)) {
-        index = index > 0 ? index - 1 : index;
-        list.splice(index, 0, item);
-        window.selectedItemIndex = index;
+        itemIndex = itemIndex > 0 ? itemIndex - 1 : itemIndex;
+        listType.splice(itemIndex, 0, listItem);
+        window.selectedItemIndex = itemIndex;
     }
     if (event.target.classList.contains(domE.todoDown)) {
-        if (index < list.length - 1) {
-            index = index + 1;
-            list.splice(index, 0, item);
-            window.selectedItemIndex = index;
+        if (itemIndex < listType.length - 1) {
+            itemIndex = itemIndex + 1;
+            listType.splice(itemIndex, 0, listItem);
+            window.selectedItemIndex = itemIndex;
         } else {
-            list.push(item);
-            window.selectedItemIndex = list.length - 1;
+            listType.push(listItem);
+            window.selectedItemIndex = listType.length - 1;
         }
     }
-    if (logMessagesEnabled) console.log("moveItemClick()", item, index, window.lists);
+    if (logMessagesEnabled) console.log("moveItemClick()", listItem, itemIndex, window.lists);
     refreshApp();
     staySelected();
 };
 
 const eraseItemClick = () => {
-    let item;
-    let index = window.selectedItemIndex;
-    if (index == null) return;
+    if (window.selectedItemIndex == null) return;
+    let listType;
     if (window.defaultListIndex == 0) {
-        item = window.lists;
+        listType = window.lists;
     }
     if (window.defaultListIndex > 0) {
-        item = window.lists[window.defaultListIndex - 1].tasks[index];
+        listType = window.lists[window.defaultListIndex - 1].tasks;
     }
-    item.splice(index, 1);
-    if (logMessagesEnabled) console.log("eraseItemClick()", item, index);
+    window.selectedItemIndex = null;
+    listType.splice(window.selectedItemIndex, 1);
+    if (logMessagesEnabled) console.log("eraseItemClick()", listType, window.selectedItemIndex);
     refreshApp();
 };
 
 const copyCutItemClick = (event) => {
-    let item;
-    let index = window.selectedItemIndex;
-    if (index == null) return;
+    if (window.selectedItemIndex == null) return;
+    let listItem;
+    let itemIndex = window.selectedItemIndex;
     if (window.defaultListIndex == 0) {
-        item = window.lists[index];
+        listItem = window.lists[itemIndex];
     }
     if (window.defaultListIndex > 0) {
-        item = window.lists[window.defaultListIndex - 1].tasks[index];
+        listItem = window.lists[window.defaultListIndex - 1].tasks[itemIndex];
     }
     window.copyCutItem = {
-        itemIndex: index,
-        item: item,
+        itemIndex,
+        listItem: JSON.parse(JSON.stringify(listItem)),
         listIndex: window.defaultListIndex,
         comand: event.target.id
     };
@@ -227,16 +227,17 @@ const copyCutItemClick = (event) => {
 };
 
 const pasteItemClick = () => {
-    let listType, itemIndex;
     if (window.copyCutItem == null) return;
     if (window.defaultListIndex != 0 && window.copyCutItem.listIndex == 0) return;
+    if (window.defaultListIndex == 0 && window.copyCutItem.listIndex != 0) return;
+    let listType, itemIndex;
     if (window.defaultListIndex == 0) {
         listType = window.lists;
     }
     if (window.defaultListIndex > 0) {
         listType = window.lists[window.defaultListIndex - 1].tasks;
     }
-    listType.unshift(window.copyCutItem.item);
+    listType.unshift(window.copyCutItem.listItem);
     itemIndex = window.copyCutItem.itemIndex;
     if (window.copyCutItem.comand == "todo-cortar" && window.defaultListIndex == 0) {
         window.lists.splice(itemIndex + 1, 1);
@@ -254,22 +255,22 @@ const pasteItemClick = () => {
 };
 
 const editItemClick = () => {
-    let index = window.selectedItemIndex;
-    if (index == null) return;
+    if (window.selectedItemIndex == null) return;
+    let itemIndex = window.selectedItemIndex;
     if (getEl(domE.todoEditar).textContent == "Editar") {
-        getEl(domE.textDesc + index).style.display = "none";
-        getEl(domE.textareaDesc + index).style.display = "block";
+        getEl(domE.textDesc + itemIndex).style.display = "none";
+        getEl(domE.textareaDesc + itemIndex).style.display = "block";
         getEl(domE.todoEditar).textContent = "Editar OK";
     } else {
-        getEl(domE.textDesc + index).style.display = "block";
-        getEl(domE.textareaDesc + index).style.display = "none";
+        getEl(domE.textDesc + itemIndex).style.display = "block";
+        getEl(domE.textareaDesc + itemIndex).style.display = "none";
         getEl(domE.todoEditar).textContent = "Editar";
-        getEl(domE.textDesc + index).textContent = getEl(domE.textareaDesc + index).value;
+        getEl(domE.textDesc + itemIndex).textContent = getEl(domE.textareaDesc + itemIndex).value;
         if (window.defaultListIndex == 0) {
-            window.lists[index].listName = getEl(domE.textareaDesc + index).value;
+            window.lists[itemIndex].listName = getEl(domE.textareaDesc + itemIndex).value;
         }
         if (window.defaultListIndex > 0) {
-            window.lists[window.defaultListIndex - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
+            window.lists[window.defaultListIndex - 1].tasks[itemIndex].taskName = getEl(domE.textareaDesc + itemIndex).value;
         }
     }
     if (logMessagesEnabled) console.log("editItemClick()");
