@@ -21,9 +21,9 @@ const refreshApp = () => {
     let defaultIndex = window.defaultListIndex;
     getEl(domE.todoList).textContent = "";
     getEl(domE.navSelect).textContent = "";
-    getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("***   MIS LISTAS  ***"));
+    getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(0 + ".   " + "***   MIS LISTAS  ***" + listStatus(-1, true)));
     for (let i = 0; i < lists.length; i++) {
-        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(lists[i].listName));
+        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(i + 1 + ".   " + lists[i].listName + listStatus(i, true)));
     }
     getEl(domE.navSelect).options[defaultIndex].selected = true;
     if (defaultIndex == 0) {
@@ -46,7 +46,7 @@ const refreshApp = () => {
         getEl(domE.todoList).insertAdjacentHTML('beforeend', getItemHtmlTemplate(domE, i));
         // ******************** LISTAS ********************
         if (defaultIndex == 0) {
-            getEl(domE.todoCheckbox + i).checked = false; //TODO: function to check if all tasks in list are completed
+            getEl(domE.todoCheckbox + i).checked = listStatus(i, false);
             getEl(domE.todoCheckbox + i).disabled = true;
             getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
             getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
@@ -81,9 +81,10 @@ const itemSelectionClick = (event) => {
     if (event.target.classList.contains(domE.todoCheckbox)) {
         window.lists[window.defaultListIndex - 1].tasks[index].finished = event.target.checked;
         if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.lists);
-        if (index == window.selectedItemIndex) return;
+        //if (index == window.selectedItemIndex) return;
     }
-    if (window.selectedItemIndex != null) refreshApp();
+    //if (window.selectedItemIndex != null) 
+    refreshApp();
     window.selectedItemIndex = index;
     getEl(domE.textDesc + index).classList.add("selected-border");
     getEl(domE.textareaDesc + index).classList.add("selected-border");
@@ -237,7 +238,7 @@ const pasteItemClick = () => {
     if (window.defaultListIndex > 0) {
         listType = window.lists[window.defaultListIndex - 1].tasks;
     }
-    listType.unshift(window.copyCutItem.listItem);
+    listType.unshift(JSON.parse(JSON.stringify(window.copyCutItem.listItem)));
     itemIndex = window.copyCutItem.itemIndex;
     if (window.copyCutItem.comand == "todo-cortar" && window.defaultListIndex == 0) {
         window.lists.splice(itemIndex + 1, 1);
@@ -249,7 +250,6 @@ const pasteItemClick = () => {
     if (window.selectedItemIndex != null) {
         window.selectedItemIndex = 0;
     }
-    window.copyCutItem = null;
     refreshApp();
     staySelected();
 };
@@ -274,6 +274,28 @@ const editItemClick = () => {
         }
     }
     if (logMessagesEnabled) console.log("editItemClick()");
+};
+
+const listStatus = (index, statusRequest) => {
+    let finishedTasksCount = 0;
+    if (index == -1) {
+        let finishedListsCount = 0;
+        for (let j = 0; j < window.lists.length; j++) {
+            for (let i = 0; i < window.lists[j].tasks.length; i++) {
+                if (window.lists[j].tasks[i].finished) finishedTasksCount++;
+            }
+            if (finishedTasksCount == window.lists[j].tasks.length) finishedListsCount++;
+            finishedTasksCount = 0;
+        }
+        if (statusRequest) return "    " + finishedListsCount + "/" + window.lists.length;
+        else return finishedListsCount == window.lists.length;
+    } else {
+        for (let i = 0; i < window.lists[index].tasks.length; i++) {
+            if (window.lists[index].tasks[i].finished) finishedTasksCount++;
+        }
+        if (statusRequest) return "    " + finishedTasksCount + "/" + window.lists[index].tasks.length;
+        else return finishedTasksCount == window.lists[index].tasks.length;
+    }
 };
 
 const getItemHtmlTemplate = (ids, index) => {
