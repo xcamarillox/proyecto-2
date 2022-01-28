@@ -34,7 +34,7 @@ Se suele referir al acrónimo CRUD a las 4 operaciones siguientes:
  - Estilo simple (mas no fácil...).
 
 
-- [live demo](https://github.com/xcamarillox/xcamarillox.github.io/proyecto-2) 
+- [live demo](https://xcamarillox.github.io/proyecto-2/index.html)
 
 _________________
 
@@ -73,4 +73,4 @@ The acronym CRUD is usually referred to the following 4 operations:
  - Simple style (but not easy...).
 
 
--  [live demo](https://github.com/xcamarillox/xcamarillox.github.io/proyecto-2) 
+- [live demo](https://xcamarillox.github.io/proyecto-2/index.html)
