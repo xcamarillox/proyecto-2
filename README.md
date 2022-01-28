@@ -31,7 +31,7 @@ Se suele referir al acrónimo CRUD a las 4 operaciones siguientes:
  - Recuperar/obtener datos del localStorage.
  - Actualizar los datos del localStorage.
  - Borrar los datos del localStorage.
- - Estilo simple (mas no fácil...).
+ - Estilo simple (mas no fácil... Chiste del desarrollador...).
 
 
 - [live demo](https://xcamarillox.github.io/proyecto-2/index.html)
@@ -70,7 +70,7 @@ The acronym CRUD is usually referred to the following 4 operations:
  - Retrieve/get data from localStorage.
  - Update localStorage data.
  - Delete data from localStorage.
- - Simple style (but not easy...).
+ - Simple style (but not easy... Developer joke...).
 
 
 - [live demo](https://xcamarillox.github.io/proyecto-2/index.html)
