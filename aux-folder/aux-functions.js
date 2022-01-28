@@ -7,11 +7,12 @@ let logMessagesEnabled = configVars.logMessagesEnabled;
 
 const getData = (myVar) => {
     let myData;
-    if (localStorageEnabled) myData = window.localStorage.getItem(myVar);
+    if (localStorageEnabled) myData = JSON.parse(window.localStorage.getItem(myVar));
     else if ("myLists" === myVar && dummyDataEnabled) myData = dummyLists;
     else if ("myDefaultListIndex" === myVar && dummyDataEnabled) myData = dummyDefaultListIndex;
     if (myVar === "myLists" && !Array.isArray(myData)) myData = [];
-    if (myVar === "myDefaultListIndex" && isNaN(myData)) myData = 0;
+    if (myVar === "myDefaultListIndex" && (isNaN(myData) || myData == null || myData > window.lists.length)) myData = 0;
+    if (localStorageEnabled) window.localStorage.setItem(myVar, JSON.stringify(myData));
     if (logMessagesEnabled) console.log("getData():", "myVar:", myVar, "myData:", myData);
     return myData;
 };
@@ -21,7 +22,8 @@ const refreshApp = () => {
     let defaultIndex = window.defaultListIndex;
     getEl(domE.todoList).textContent = "";
     getEl(domE.navSelect).textContent = "";
-    getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(0 + ".   " + "***   MIS LISTAS  ***" + listStatus(-1, true)));
+    if (lists.length == 0) getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("***   MIS LISTAS  ***"));
+    else getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(0 + ".   " + "***   MIS LISTAS  ***" + listStatus(-1, true)));
     for (let i = 0; i < lists.length; i++) {
         getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(i + 1 + ".   " + lists[i].listName + listStatus(i, true)));
     }
@@ -80,7 +82,7 @@ const itemSelectionClick = (event) => {
     index = getSelectedItemIndex(event.target.id);
     if (event.target.classList.contains(domE.todoCheckbox)) {
         window.lists[window.defaultListIndex - 1].tasks[index].finished = event.target.checked;
-        if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.lists);
+        if (localStorageEnabled) window.localStorage.setItem("myDefaultListIndex", JSON.stringify(window.lists));
         //if (index == window.selectedItemIndex) return;
     }
     //if (window.selectedItemIndex != null) 
@@ -107,7 +109,7 @@ const staySelected = () => {
 const selectListChange = (event) => {
     window.selectedItemIndex = null;
     window.defaultListIndex = event.srcElement.options.selectedIndex;
-    if (localStorageEnabled) localStorage.setItem("myDefaultListIndex", window.defaultListIndex);
+    if (localStorageEnabled) window.localStorage.setItem("myDefaultListIndex", JSON.stringify(window.defaultListIndex));
     if (logMessagesEnabled) console.log("selectListChange():", window.lists, window.defaultListIndex);
     refreshApp();
 };
@@ -122,6 +124,8 @@ const addItemClick = (event) => {
             listName: getEl(domE.navInput).value,
             tasks: []
         });
+        window.defaultListIndex = 1;
+        if (localStorageEnabled) window.localStorage.setItem("myDefaultListIndex", JSON.stringify(window.defaultListIndex));
         if (logMessagesEnabled) console.log("addItemClick():", "lista", window.lists);
     }
     if (event.target.id == domE.navTask) {
@@ -131,8 +135,9 @@ const addItemClick = (event) => {
         });
         if (logMessagesEnabled) console.log("addItemClick():", "task", window.lists);
     }
-    if (localStorageEnabled) localStorage.setItem("myLists", window.lists);
     getEl(domE.navInput).value = "";
+    window.selectedItemIndex = null;
+    if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     refreshApp();
 };
 
@@ -140,8 +145,8 @@ const eraseListClick = (event) => {
     window.lists.splice(window.defaultListIndex - 1, 1);
     window.defaultListIndex = 0;
     if (localStorageEnabled) {
-        localStorage.setItem("myDefaultListIndex", window.defaultListIndex);
-        localStorage.setItem("myLists", window.lists);
+        window.localStorage.setItem("myDefaultListIndex", JSON.stringify(window.defaultListIndex));
+        window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     }
     if (logMessagesEnabled) console.log("eraseListClick():", window.lists);
     refreshApp();
@@ -155,7 +160,7 @@ const allItemsClick = (event) => {
         window.lists[window.defaultListIndex - 1].tasks[i].finished = boolVal;
     }
     if (logMessagesEnabled) console.log("allItemsClick():", window.lists, boolVal);
-    if (localStorageEnabled) localStorage.setItem("myLists", window.lists);
+    if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     refreshApp();
     staySelected();
 };
@@ -188,6 +193,7 @@ const moveItemClick = (event) => {
             window.selectedItemIndex = listType.length - 1;
         }
     }
+    if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     if (logMessagesEnabled) console.log("moveItemClick()", listItem, itemIndex, window.lists);
     refreshApp();
     staySelected();
@@ -204,6 +210,7 @@ const eraseItemClick = () => {
     }
     window.selectedItemIndex = null;
     listType.splice(window.selectedItemIndex, 1);
+    if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     if (logMessagesEnabled) console.log("eraseItemClick()", listType, window.selectedItemIndex);
     refreshApp();
 };
@@ -272,6 +279,7 @@ const editItemClick = () => {
         if (window.defaultListIndex > 0) {
             window.lists[window.defaultListIndex - 1].tasks[itemIndex].taskName = getEl(domE.textareaDesc + itemIndex).value;
         }
+        if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     }
     if (logMessagesEnabled) console.log("editItemClick()");
 };
@@ -284,7 +292,7 @@ const listStatus = (index, statusRequest) => {
             for (let i = 0; i < window.lists[j].tasks.length; i++) {
                 if (window.lists[j].tasks[i].finished) finishedTasksCount++;
             }
-            if (finishedTasksCount == window.lists[j].tasks.length) finishedListsCount++;
+            if (finishedTasksCount == window.lists[j].tasks.length && window.lists[j].tasks.length != 0) finishedListsCount++;
             finishedTasksCount = 0;
         }
         if (statusRequest) return "    " + finishedListsCount + "/" + window.lists.length;
@@ -294,7 +302,7 @@ const listStatus = (index, statusRequest) => {
             if (window.lists[index].tasks[i].finished) finishedTasksCount++;
         }
         if (statusRequest) return "    " + finishedTasksCount + "/" + window.lists[index].tasks.length;
-        else return finishedTasksCount == window.lists[index].tasks.length;
+        else return (finishedTasksCount == window.lists[index].tasks.length && window.lists[index].tasks.length > 0);
     }
 };
 

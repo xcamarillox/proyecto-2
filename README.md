@@ -1,5 +1,6 @@
-## PROYECTO 2: ToDos los dias / CRUD App 
-#### (scroll for the english version)
+## PROYECTO 2: ToDos los dias / CRUD App
+- #### (scroll for the english version)
+- #### Probado en Chrome
 
 
 La app web **ToDos los dias** presenta una interfaz simple para administrar listas por hacer (To Do) y fue creada con la intención de utilizar de forma práctica código vanilla javascript (sin uso de frameworks) en un proyecto, con enfoque en resultados profesionales. También se procura la implementación del concepto CRUD en los datos del usuario de forma persistente y local con **localStorage**. 
@@ -39,6 +40,7 @@ _________________
 
 
 ## PROJECT 2: ToDos los dias / CRUD App
+- #### Chrome Tested
 
  The **ToDos los dias** web app presents a simple interface to manage lists to do (To Do) and was created with the intention of using vanilla javascript code in a practical way (without the use of frameworks) in a project, with a focus on professional results. The implementation of the CRUD concept in the user's data in a persistent and local way with **localStorage** is also sought.
 

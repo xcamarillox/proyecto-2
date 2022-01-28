@@ -1,6 +1,6 @@
 let configVars = {
-    dummyDataEnabled: true,
-    localStorageEnabled: false,
+    dummyDataEnabled: false,
+    localStorageEnabled: true,
     logMessagesEnabled: true,
 };
 
