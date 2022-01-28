@@ -23,9 +23,9 @@ const refreshApp = () => {
     getEl(domE.todoList).textContent = "";
     getEl(domE.navSelect).textContent = "";
     if (lists.length == 0) getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("MIS LISTAS"));
-    else getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("#. " + listStatus(-1, true) + "MIS LISTAS"));
+    else getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate("#. [ " + listStatus(-1, true) + " ] -> MIS LISTAS"));
     for (let i = 0; i < lists.length; i++) {
-        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(i + 1 + ". " + listStatus(i, true) + lists[i].listName));
+        getEl(domE.navSelect).insertAdjacentHTML('beforeend', getSelectListHtmlTemplate(i + 1 + ". [ " + listStatus(i, true) + " ] -> " + lists[i].listName));
     }
     getEl(domE.navSelect).options[defaultIndex].selected = true;
     if (defaultIndex == 0) {
@@ -45,14 +45,13 @@ const refreshApp = () => {
     }
     if (logMessagesEnabled) console.log("refreshApp():", "item:", lists);
     for (let i = 0; i < lists.length; i++) {
-        getEl(domE.todoList).insertAdjacentHTML('beforeend', getItemHtmlTemplate(domE, i));
+        getEl(domE.todoList).insertAdjacentHTML('beforeend', getItemHtmlTemplate(domE, i, defaultIndex));
         // ******************** LISTAS ********************
         if (defaultIndex == 0) {
             getEl(domE.todoCheckbox + i).checked = listStatus(i, false);
             getEl(domE.todoCheckbox + i).disabled = true;
             getEl(domE.textDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
             getEl(domE.textareaDesc + i).insertAdjacentHTML('beforeend', lists[i].listName);
-            if (listStatus(i, false)) getEl(domE.textDesc + i).classList.add("done");
         }
         // ******************** TAREAS ********************
         if (defaultIndex > 0) {
@@ -297,22 +296,23 @@ const listStatus = (index, statusRequest) => {
             if (finishedTasksCount == window.lists[j].tasks.length && window.lists[j].tasks.length != 0) finishedListsCount++;
             finishedTasksCount = 0;
         }
-        if (statusRequest) return "[ " + finishedListsCount + "/" + window.lists.length + " ] -> ";
+        if (statusRequest) return finishedListsCount + "/" + window.lists.length;
         else return finishedListsCount == window.lists.length;
     } else {
         for (let i = 0; i < window.lists[index].tasks.length; i++) {
             if (window.lists[index].tasks[i].finished) finishedTasksCount++;
         }
-        if (statusRequest) return "[ " + finishedTasksCount + "/" + window.lists[index].tasks.length + " ] -> ";
+        if (statusRequest) return finishedTasksCount + "/" + window.lists[index].tasks.length;
         else return (finishedTasksCount == window.lists[index].tasks.length && window.lists[index].tasks.length > 0);
     }
 };
 
-const getItemHtmlTemplate = (ids, index) => {
+const getItemHtmlTemplate = (ids, index, listIndex) => {
     return `<div class="todolist-item input-group">
                 <div class="todo-check input-group-text" id="${ids.todoCheckDiv + index}">
                     <span>${index + 1}<span>
                     <input class="todo-checkbox form-check-input" type="checkbox" value="" id="${ids.todoCheckbox + index}">
+                    <span>${listIndex == 0 ?  "[" +  listStatus(index, true) + "]" :""}<span>
                 </div>
                 <textarea class="form-control" id="${ids.textareaDesc + index}"></textarea>
                 <div class="text-desc form-control" id="${ids.textDesc + index}"></div>
