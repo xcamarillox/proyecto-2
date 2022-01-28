@@ -210,9 +210,8 @@ const eraseItemClick = () => {
     if (window.defaultListIndex > 0) {
         listType = window.lists[window.defaultListIndex - 1].tasks;
     }
+    listType.splice(window.selectedItemIndex, 1);
     window.selectedItemIndex = null;
-    if (listType.length < window.selectedItemIndex + 1) listType.splice(window.selectedItemIndex, 1);
-    else listType.pop();
     if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     if (logMessagesEnabled) console.log("eraseItemClick()", listType, window.selectedItemIndex);
     refreshApp();
