@@ -58,6 +58,12 @@ div.todo-check {
     background-color: rgb(226, 237, 253);
 }
 
+div.todo-check>span {
+    margin: auto 5px;
+    color: rgb(13, 110, 253);
+    font-weight: 700;
+}
+
 .selected-border {
     border-color: rgb(13, 110, 253);
     color: rgb(1, 76, 189);
@@ -77,6 +83,12 @@ div.todo-menu {
 footer {
     background-color: rgb(226, 237, 253);
     height: 50px;
+}
+
+.done {
+    color: gray;
+    text-decoration: line-through;
+    text-decoration-color: lightgrey
 }
 
 @media screen and (min-width: 768px) {
