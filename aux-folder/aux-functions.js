@@ -67,16 +67,8 @@ const refreshApp = () => {
 };
 
 const itemSelectionClick = (event) => {
-    let index = window.selectedItemIndex;
-    if (getEl(domE.todoEditar).textContent == "Editar OK") {
-        if (window.defaultListIndex == 0) {
-            window.lists[index].listName = getEl(domE.textareaDesc + index).value;
-        }
-        if (window.defaultListIndex > 0) {
-            window.lists[window.defaultListIndex - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
-        }
-        getEl(domE.todoEditar).textContent = "Editar";
-    }
+    let index;
+    editModeCheck(window.selectedItemIndex);
     if (!event.target.classList.contains(domE.todoCheckbox) &&
         getSelectedItemIndex(event.target.id) == window.selectedItemIndex)
         return;
@@ -108,6 +100,7 @@ const staySelected = () => {
 };
 
 const selectListChange = (event) => {
+    editModeCheck(window.selectedItemIndex);
     window.selectedItemIndex = null;
     window.defaultListIndex = event.srcElement.options.selectedIndex;
     if (localStorageEnabled) window.localStorage.setItem("myDefaultListIndex", JSON.stringify(window.defaultListIndex));
@@ -201,6 +194,7 @@ const moveItemClick = (event) => {
 };
 
 const eraseItemClick = () => {
+    editModeCheck(window.selectedItemIndex);
     if (window.selectedItemIndex == null) return;
     let listType;
     if (window.defaultListIndex == 0) {
@@ -217,6 +211,7 @@ const eraseItemClick = () => {
 };
 
 const copyCutItemClick = (event) => {
+    editModeCheck(window.selectedItemIndex);
     if (window.selectedItemIndex == null) return;
     let listItem;
     let itemIndex = window.selectedItemIndex;
@@ -236,6 +231,7 @@ const copyCutItemClick = (event) => {
 };
 
 const pasteItemClick = () => {
+    editModeCheck(window.selectedItemIndex);
     if (window.copyCutItem == null) return;
     if (window.defaultListIndex != 0 && window.copyCutItem.listIndex == 0) return;
     if (window.defaultListIndex == 0 && window.copyCutItem.listIndex != 0) return;
@@ -258,6 +254,7 @@ const pasteItemClick = () => {
     if (window.selectedItemIndex != null) {
         window.selectedItemIndex = 0;
     }
+    if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
     refreshApp();
     staySelected();
 };
@@ -284,6 +281,20 @@ const editItemClick = () => {
     }
     if (logMessagesEnabled) console.log("editItemClick()");
 };
+
+const editModeCheck = (index) => {
+    if (getEl(domE.todoEditar).textContent == "Editar OK") {
+        if (window.defaultListIndex == 0) {
+            window.lists[index].listName = getEl(domE.textareaDesc + index).value;
+        }
+        if (window.defaultListIndex > 0) {
+            window.lists[window.defaultListIndex - 1].tasks[index].taskName = getEl(domE.textareaDesc + index).value;
+        }
+        getEl(domE.todoEditar).textContent = "Editar";
+        if (localStorageEnabled) window.localStorage.setItem("myLists", JSON.stringify(window.lists));
+    }
+};
+
 
 const listStatus = (index, statusRequest) => {
     let finishedTasksCount = 0;
